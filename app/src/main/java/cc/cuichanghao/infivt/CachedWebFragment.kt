@@ -20,7 +20,7 @@ class CachedWebFragment : Fragment() {
         val map = listOf(
                 "google" to "https://google.com",
                 "yahoo" to "https://yahoo.com",
-                "facebook" to "https://facebook.com",
+                "news" to "https://news.google.com",
                 "wikipedia" to "https://wikipedia.org",
                 "amazon" to "https://amazon.com"
 

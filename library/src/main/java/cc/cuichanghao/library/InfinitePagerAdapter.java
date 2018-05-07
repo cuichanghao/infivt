@@ -10,12 +10,11 @@ import android.view.ViewGroup;
 /**
  * A PagerAdapter that wraps around another PagerAdapter to handle paging wrap-around.
  */
-public class InfinitePagerAdapter extends PagerAdapter {
+public class InfinitePagerAdapter extends PagerAdapter{
 
-    private static final String TAG = "InfinitePagerAdapter";
-    private static final boolean DEBUG = false;
-
+    public static final int NUM_OF_LOOPS = 1000; //enough 1000 loop
     private PagerAdapter adapter;
+    private int selectedPosition = 0;
 
     public InfinitePagerAdapter(PagerAdapter adapter) {
         this.adapter = adapter;
@@ -28,7 +27,11 @@ public class InfinitePagerAdapter extends PagerAdapter {
         }
         // warning: scrolling to very high values (1,000,000+) results in
         // strange drawing behaviour
-        return Integer.MAX_VALUE;
+        return NUM_OF_LOOPS * getRealCount();
+    }
+
+    public void willBePageSelect(int selectPosition) {
+        this.selectedPosition = selectPosition;
     }
 
     /**
@@ -41,21 +44,16 @@ public class InfinitePagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         int virtualPosition = position % getRealCount();
-        debug("instantiateItem: real position: " + position);
-        debug("instantiateItem: virtual position: " + virtualPosition);
-
         // only expose virtual position to the inner adapter
         return adapter.instantiateItem(container, virtualPosition);
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        int virtualPosition = position % getRealCount();
-        debug("destroyItem: real position: " + position);
-        debug("destroyItem: virtual position: " + virtualPosition);
-
-        // only expose virtual position to the inner adapter
-        adapter.destroyItem(container, virtualPosition, object);
+        int distance = Math.abs((selectedPosition - position) % getRealCount());
+        if( distance > 1 && distance < (getRealCount() - 1)) {
+            adapter.destroyItem(container, position % getRealCount(), object);
+        }
     }
 
     /*
@@ -121,15 +119,5 @@ public class InfinitePagerAdapter extends PagerAdapter {
     @Override
     public int getItemPosition(Object object) {
         return adapter.getItemPosition(object);
-    }
-
-    /*
-     * End delegation
-     */
-
-    private void debug(String message) {
-        if (DEBUG) {
-            Log.d(TAG, message);
-        }
     }
 }
