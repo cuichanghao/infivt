@@ -3,7 +3,6 @@ package cc.cuichanghao.library;
 import android.database.DataSetObserver;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,11 +11,20 @@ import android.view.ViewGroup;
  */
 public class InfinitePagerAdapter extends PagerAdapter{
 
-    public static final int NUM_OF_LOOPS = 1000; //enough 1000 loop
+    private static final int DEFAULT_NUM_OF_LOOPS = 1000; //enough 1000 loop
+    private int numOfLoops = DEFAULT_NUM_OF_LOOPS;
     private PagerAdapter adapter;
 
     public InfinitePagerAdapter(PagerAdapter adapter) {
         this.adapter = adapter;
+    }
+
+    public void setNumOfLoops(int numOfLoops) {
+        this.numOfLoops = numOfLoops;
+    }
+
+    public int getNumOfLoops() {
+        return numOfLoops;
     }
 
     @Override
@@ -26,7 +34,7 @@ public class InfinitePagerAdapter extends PagerAdapter{
         }
         // warning: scrolling to very high values (1,000,000+) results in
         // strange drawing behaviour
-        return NUM_OF_LOOPS * getRealCount();
+        return numOfLoops * getRealCount();
     }
 
     /**

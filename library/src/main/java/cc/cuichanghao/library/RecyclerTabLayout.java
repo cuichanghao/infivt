@@ -117,14 +117,7 @@ public class RecyclerTabLayout extends RecyclerView {
         setLayoutManager(mLinearLayoutManager);
         setItemAnimator(null);
         mPositionThreshold = DEFAULT_POSITION_THRESHOLD;
-
-        if (mRecyclerOnScrollListener != null) {
-            removeOnScrollListener(mRecyclerOnScrollListener);
-            mRecyclerOnScrollListener = null;
-        }
-
-        mRecyclerOnScrollListener = new RecyclerOnScrollListener(this, mLinearLayoutManager);
-        addOnScrollListener(mRecyclerOnScrollListener);
+        setRefreshIndicatorWithScroll(true);
     }
 
     private void getAttributes(Context context, AttributeSet attrs, int defStyle) {
@@ -148,7 +141,7 @@ public class RecyclerTabLayout extends RecyclerView {
                 R.styleable.rtl_RecyclerTabLayout_rtl_tabPaddingEnd, mTabPaddingEnd);
         mTabPaddingBottom = a.getDimensionPixelSize(
                 R.styleable.rtl_RecyclerTabLayout_rtl_tabPaddingBottom, mTabPaddingBottom);
-        mTabSelectType = a.getInt(R.styleable.rtl_RecyclerTabLayout_rtl_selectType, 0);
+        mTabSelectType = a.getInt(R.styleable.rtl_RecyclerTabLayout_rtl_selectType, -1);
 
         if (a.hasValue(R.styleable.rtl_RecyclerTabLayout_rtl_tabSelectedTextColor)) {
             mTabSelectedTextColor = a
@@ -203,6 +196,17 @@ public class RecyclerTabLayout extends RecyclerView {
 
     public void setPositionThreshold(float positionThreshold) {
         mPositionThreshold = positionThreshold;
+    }
+
+    public void setRefreshIndicatorWithScroll(boolean autoRefreshIndicator) {
+        if (mRecyclerOnScrollListener != null) {
+            removeOnScrollListener(mRecyclerOnScrollListener);
+            mRecyclerOnScrollListener = null;
+        }
+        if (autoRefreshIndicator) {
+            mRecyclerOnScrollListener = new RecyclerOnScrollListener(this, mLinearLayoutManager);
+            addOnScrollListener(mRecyclerOnScrollListener);
+        }
     }
 
     public void setUpWithViewPager(InfiniteViewPager viewPager) {
@@ -792,15 +796,13 @@ public class RecyclerTabLayout extends RecyclerView {
         @Override
         public void setSelected(boolean selected) {
             super.setSelected(selected);
+            Typeface typeface;
             if(selected) {
-                Typeface typeface;
-                if(isSelected()) {
-                    typeface = Typeface.DEFAULT_BOLD;
-                } else {
-                    typeface = Typeface.DEFAULT;
-                }
-                setTypeface(typeface);
+                typeface = Typeface.DEFAULT_BOLD;
+            } else {
+                typeface = Typeface.DEFAULT;
             }
+            setTypeface(typeface);
         }
     }
 

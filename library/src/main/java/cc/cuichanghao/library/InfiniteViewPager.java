@@ -54,7 +54,7 @@ public class InfiniteViewPager extends ViewPager {
         }
         if (getAdapter() instanceof InfinitePagerAdapter) {
             InfinitePagerAdapter infAdapter = (InfinitePagerAdapter) getAdapter();
-            return infAdapter.getRealCount() * (InfinitePagerAdapter.NUM_OF_LOOPS / 2);
+            return infAdapter.getRealCount() * (infAdapter.getNumOfLoops() / 2);
         } else {
             return 0;
         }

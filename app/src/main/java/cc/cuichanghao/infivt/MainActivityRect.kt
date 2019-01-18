@@ -6,12 +6,11 @@ import cc.cuichanghao.library.InfinitePagerAdapter
 import cc.cuichanghao.library.InfiniteViewPager
 import cc.cuichanghao.library.RecyclerTabLayout
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivityRect : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main_rect)
 
         val adapter = MainAdapter(supportFragmentManager)
         val wrappedAdapter = InfinitePagerAdapter(adapter)

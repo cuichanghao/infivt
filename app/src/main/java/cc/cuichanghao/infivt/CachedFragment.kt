@@ -15,7 +15,7 @@ class CachedFragment : Fragment() {
     private var position: Int = 0
 
     companion object {
-        val list = listOf("A", "B-LargeTitle", "C", "D", "E-LargeTitle")
+        val list = listOf("A", "B-LargeTitle", "C", "D")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
