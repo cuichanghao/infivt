@@ -8,11 +8,10 @@ infinite demo:
 
 <img src="https://github.com/cuichanghao/infivt/blob/master/demo/ezgif.com-crop.gif" width="250" height="250">
 
-![demo](https://github.com/cuichanghao/infivt/blob/master/demo/ezgif.com-crop.gif =250x250)
 
 screen fix partial rect demo:
 
-![demo](https://github.com/cuichanghao/infivt/blob/master/demo/ezgif.com-crop_fix.gif =250x250)
+<img src="https://github.com/cuichanghao/infivt/blob/master/demo/ezgif.com-crop_fix.gif" width="250" height="250">
 
 ## How to use
 root build.gradle
