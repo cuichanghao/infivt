@@ -5,10 +5,11 @@ Reference:[RecyclerTabLayout](https://github.com/nshmura/RecyclerTabLayout),[Inf
 
 ## Demos
 infinite demo:
-![demo](demo/ezgif.com-crop.gif)
+
+![demo](demo/ezgif.com-crop.gif =250x250)
 
 screen fix partial rect demo:
-![demo](demo/ezgif.com-crop_fix.gif)
+![demo](demo/ezgif.com-crop_fix.gif =250x250)
 
 ## How to use
 root build.gradle
