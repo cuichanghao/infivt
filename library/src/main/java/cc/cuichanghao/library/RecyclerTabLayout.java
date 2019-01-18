@@ -582,7 +582,9 @@ public class RecyclerTabLayout extends RecyclerView {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            mRecyclerTabLayout.scrollToTab(position, positionOffset, false);
+            if (mScrollState != ViewPager.SCROLL_STATE_IDLE) {
+                mRecyclerTabLayout.scrollToTab(position, positionOffset, false);
+            }
         }
 
         @Override
@@ -678,6 +680,7 @@ public class RecyclerTabLayout extends RecyclerView {
                         AppCompatResources.getDrawable(tabTextView.getContext(), mTabBackgroundResId));
             }
             tabTextView.setLayoutParams(createLayoutParamsForTabs());
+
             return new ViewHolder(tabTextView);
         }
 
@@ -786,18 +789,18 @@ public class RecyclerTabLayout extends RecyclerView {
             return new ColorStateList(states, colors);
         }
 
-
         @Override
-        protected void onDraw(Canvas canvas) {
-            Typeface typeface;
-            if(isSelected()) {
-                typeface = Typeface.DEFAULT_BOLD;
-            } else {
-                typeface = Typeface.DEFAULT;
+        public void setSelected(boolean selected) {
+            super.setSelected(selected);
+            if(selected) {
+                Typeface typeface;
+                if(isSelected()) {
+                    typeface = Typeface.DEFAULT_BOLD;
+                } else {
+                    typeface = Typeface.DEFAULT;
+                }
+                setTypeface(typeface);
             }
-
-            setTypeface(typeface);
-            super.onDraw(canvas);
         }
     }
 
