@@ -8,14 +8,14 @@ import cc.cuichanghao.library.FragmentCachePagerAdapter
 class MainAdapter(fm: FragmentManager) : FragmentCachePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
-        return CachedWebFragment().apply {
+        return CachedFragment().apply {
             arguments = Bundle().apply {
-                putInt("identifier", position)
+                putInt("position", position)
             }
         }
     }
 
-    override fun getCount() = CachedWebFragment.map.size
+    override fun getCount() = CachedFragment.list.size
 
-    override fun getPageTitle(position: Int) = CachedWebFragment.map[position].first
+    override fun getPageTitle(position: Int) = CachedFragment.list[position]
 }

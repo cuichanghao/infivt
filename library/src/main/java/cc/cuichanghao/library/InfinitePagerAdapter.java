@@ -50,10 +50,7 @@ public class InfinitePagerAdapter extends PagerAdapter{
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        int distance = Math.abs((selectedPosition - position) % getRealCount());
-        if( distance > 1 && distance < (getRealCount() - 1)) {
-            adapter.destroyItem(container, position % getRealCount(), object);
-        }
+        adapter.destroyItem(container, position % getRealCount(), object);
     }
 
     /*
