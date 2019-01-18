@@ -21,5 +21,5 @@ allprojects {
 app build.gradle
 
 ```
-implementation 'com.github.cuichanghao:infivt:9ddf832'
+implementation 'com.github.cuichanghao:infivt:17f229a'
 ```
