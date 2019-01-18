@@ -48,6 +48,10 @@ public class InfiniteViewPager extends ViewPager {
         super.setCurrentItem(item, smoothScroll);
     }
 
+    /**
+     * find center position
+     * @return
+     */
     public int getOffsetAmount() {
         if (getAdapter().getCount() == 0) {
             return 0;

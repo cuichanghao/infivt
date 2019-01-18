@@ -25,6 +25,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.content.res.AppCompatResources;
@@ -241,6 +242,10 @@ public class RecyclerTabLayout extends RecyclerView {
 
     public void setCurrentItem(int position, boolean smoothScroll) {
         if (mViewPager != null) {
+            PagerAdapter adapter = mViewPager.getAdapter();
+            if(adapter instanceof InfinitePagerAdapter) {
+                ((InfinitePagerAdapter)adapter).willBePageSelect(position);
+            }
             mViewPager.setCurrentItem(position, smoothScroll);
             scrollToTab(mViewPager.getCurrentItem());
             return;
@@ -431,8 +436,6 @@ public class RecyclerTabLayout extends RecyclerView {
 
             canvas.drawRect(left, top, right, bottom, mIndicatorPaint);
 
-            Log.d("RecyclerTabLayout", "left:" + left + ",right:" + right);
-
             switch (mTabSelectType) {
                 case 0:
                     //oval
@@ -598,6 +601,11 @@ public class RecyclerTabLayout extends RecyclerView {
 
         @Override
         public void onPageSelected(int position) {
+            PagerAdapter adapter = mRecyclerTabLayout.mViewPager.getAdapter();
+            if(adapter instanceof InfinitePagerAdapter) {
+                ((InfinitePagerAdapter)adapter).willBePageSelect(position);
+            }
+
             if (mScrollState == ViewPager.SCROLL_STATE_IDLE) {
                 if (mRecyclerTabLayout.mIndicatorPosition != position) {
                     mRecyclerTabLayout.scrollToTab(position);
@@ -757,6 +765,11 @@ public class RecyclerTabLayout extends RecyclerView {
                         if (pos != NO_POSITION) {
                             if( (pos - mIndicatorPosition) % mRealItemCount == 0) {
                                 return;
+                            }
+
+                            PagerAdapter pagerAdapter = getViewPager().getAdapter();
+                            if(pagerAdapter instanceof InfinitePagerAdapter){
+                                ((InfinitePagerAdapter) pagerAdapter).willBePageSelect(pos);
                             }
 
                             int loopDistance = pos - mIndicatorPosition;

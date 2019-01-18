@@ -13,6 +13,7 @@ public class InfinitePagerAdapter extends PagerAdapter{
 
     private static final int DEFAULT_NUM_OF_LOOPS = 1000; //enough 1000 loop
     private int numOfLoops = DEFAULT_NUM_OF_LOOPS;
+    private int selectedPosition = 0;
     private PagerAdapter adapter;
 
     public InfinitePagerAdapter(PagerAdapter adapter) {
@@ -44,6 +45,10 @@ public class InfinitePagerAdapter extends PagerAdapter{
         return adapter.getCount();
     }
 
+    public void willBePageSelect(int selectPosition) {
+        this.selectedPosition = selectPosition;
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         int virtualPosition = position % getRealCount();
@@ -53,7 +58,10 @@ public class InfinitePagerAdapter extends PagerAdapter{
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        adapter.destroyItem(container, position % getRealCount(), object);
+        int distance = Math.abs((selectedPosition - position) % getRealCount());
+        if( distance > 1 && distance < (getRealCount() - 1)) {
+            adapter.destroyItem(container, position % getRealCount(), object);
+        }
     }
 
     /*
@@ -120,4 +128,5 @@ public class InfinitePagerAdapter extends PagerAdapter{
     public int getItemPosition(Object object) {
         return adapter.getItemPosition(object);
     }
+
 }

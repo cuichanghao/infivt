@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import cc.cuichanghao.library.FragmentCachePagerAdapter
+import java.util.*
 
 class MainAdapter(fm: FragmentManager) : FragmentCachePagerAdapter(fm) {
 
