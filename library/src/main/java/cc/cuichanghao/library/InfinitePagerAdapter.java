@@ -14,7 +14,6 @@ public class InfinitePagerAdapter extends PagerAdapter{
 
     public static final int NUM_OF_LOOPS = 1000; //enough 1000 loop
     private PagerAdapter adapter;
-    private int selectedPosition = 0;
 
     public InfinitePagerAdapter(PagerAdapter adapter) {
         this.adapter = adapter;
@@ -28,10 +27,6 @@ public class InfinitePagerAdapter extends PagerAdapter{
         // warning: scrolling to very high values (1,000,000+) results in
         // strange drawing behaviour
         return NUM_OF_LOOPS * getRealCount();
-    }
-
-    public void willBePageSelect(int selectPosition) {
-        this.selectedPosition = selectPosition;
     }
 
     /**

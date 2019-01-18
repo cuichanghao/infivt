@@ -20,6 +20,11 @@
         <attr name="rtl_tabPadding" format="dimension"/>
 
         <attr name="rtl_scrollEnabled" format="boolean"/>
+        <attr name="rtl_selectType" format="enum">
+            <enum name = "oval" value = "0"/>
+            <enum name = "rect" value = "1"/>
+            <enum name = "partialRect" value = "2"/>
+        </attr>
 
     </declare-styleable>
 </resources>

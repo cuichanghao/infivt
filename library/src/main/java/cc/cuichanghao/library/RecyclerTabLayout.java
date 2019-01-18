@@ -22,6 +22,9 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.content.res.AppCompatResources;
@@ -30,6 +33,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +51,7 @@ public class RecyclerTabLayout extends RecyclerView {
     protected static final int DEFAULT_DRAW_INDICATOR_COUNT = 20; //cached indicator count
 
     protected Paint mIndicatorPaint;
+    protected Paint mTabItemIndicatorPaint;
     protected int mTabBackgroundResId;
     protected int mTabOnScreenLimit;
     protected int mTabMinWidth;
@@ -58,11 +63,13 @@ public class RecyclerTabLayout extends RecyclerView {
     protected int mTabPaddingTop;
     protected int mTabPaddingEnd;
     protected int mTabPaddingBottom;
+    protected int mTabSelectType;
     protected int mIndicatorHeight;
     protected int mRealItemCount;
 
     //gather show indicator position
-    protected LinkedHashSet<Integer> mIndicatorPositions = new LinkedHashSet(DEFAULT_DRAW_INDICATOR_COUNT);
+    protected LinkedHashSet<Integer> mIndicatorPositionQueue = new LinkedHashSet(DEFAULT_DRAW_INDICATOR_COUNT);
+    protected LinkedHashSet<Integer> mIndicatorTempDeque = new LinkedHashSet();
     protected LinearLayoutManager mLinearLayoutManager;
     protected RecyclerOnScrollListener mRecyclerOnScrollListener;
     protected InfiniteViewPager mViewPager;
@@ -76,7 +83,11 @@ public class RecyclerTabLayout extends RecyclerView {
     protected float mOldPositionOffset;
     protected float mPositionThreshold;
     protected boolean mRequestScrollToTab;
-    protected boolean mScrollEanbled;
+    protected boolean mScrollEnabled;
+
+    private int mPxPaddingOval;
+    private int mPxPaddingPartialRectTop;
+    private int mPxRound;
 
     public RecyclerTabLayout(Context context) {
         this(context, null);
@@ -90,11 +101,16 @@ public class RecyclerTabLayout extends RecyclerView {
         super(context, attrs, defStyle);
         setWillNotDraw(false);
         mIndicatorPaint = new Paint();
+        mTabItemIndicatorPaint = new Paint();
+        mPxPaddingOval = dip(getContext(), 4);
+        mPxPaddingPartialRectTop = dip(getContext(), 8);
+        mPxRound = dip(getContext(), 25);
+
         getAttributes(context, attrs, defStyle);
         mLinearLayoutManager = new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollHorizontally() {
-                return mScrollEanbled;
+                return mScrollEnabled;
             }
         };
         mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -132,6 +148,7 @@ public class RecyclerTabLayout extends RecyclerView {
                 R.styleable.rtl_RecyclerTabLayout_rtl_tabPaddingEnd, mTabPaddingEnd);
         mTabPaddingBottom = a.getDimensionPixelSize(
                 R.styleable.rtl_RecyclerTabLayout_rtl_tabPaddingBottom, mTabPaddingBottom);
+        mTabSelectType = a.getInt(R.styleable.rtl_RecyclerTabLayout_rtl_selectType, 0);
 
         if (a.hasValue(R.styleable.rtl_RecyclerTabLayout_rtl_tabSelectedTextColor)) {
             mTabSelectedTextColor = a
@@ -150,7 +167,7 @@ public class RecyclerTabLayout extends RecyclerView {
 
         mTabBackgroundResId = a
                 .getResourceId(R.styleable.rtl_RecyclerTabLayout_rtl_tabBackground, 0);
-        mScrollEanbled = a.getBoolean(R.styleable.rtl_RecyclerTabLayout_rtl_scrollEnabled, true);
+        mScrollEnabled = a.getBoolean(R.styleable.rtl_RecyclerTabLayout_rtl_scrollEnabled, true);
         a.recycle();
     }
 
@@ -166,6 +183,7 @@ public class RecyclerTabLayout extends RecyclerView {
 
     public void setIndicatorColor(int color) {
         mIndicatorPaint.setColor(color);
+        mTabItemIndicatorPaint.setColor(color);
     }
 
     public void setIndicatorHeight(int indicatorHeight) {
@@ -233,10 +251,14 @@ public class RecyclerTabLayout extends RecyclerView {
     }
 
     public void setCurrentCenterItem(int position) {
-        mIndicatorPositions.clear();
-        for(int i = position - DEFAULT_DRAW_INDICATOR_COUNT; i < position + DEFAULT_DRAW_INDICATOR_COUNT; i++ ){
-            if( (i - mIndicatorPosition) % mRealItemCount == 0 ){
-                mIndicatorPositions.add(i);
+        mIndicatorPositionQueue.clear();
+        if(mTabOnScreenLimit > 0) {
+            mIndicatorPositionQueue.add(position);
+        } else {
+            for (int i = position - DEFAULT_DRAW_INDICATOR_COUNT; i < position + DEFAULT_DRAW_INDICATOR_COUNT; i++) {
+                if ((i - mIndicatorPosition) % mRealItemCount == 0) {
+                    mIndicatorPositionQueue.add(i);
+                }
             }
         }
         invalidate();
@@ -283,7 +305,7 @@ public class RecyclerTabLayout extends RecyclerView {
         int lastVisiblePosition = mLinearLayoutManager.findLastVisibleItemPosition();
 
         //search visible area the same indicator item
-        for(int i = firstVisiblePosition; i < lastVisiblePosition; i++ ){
+        for(int i = firstVisiblePosition; i <= lastVisiblePosition; i++ ){
             if( (i - position) % mRealItemCount == 0 ){
                 selectedView = mLinearLayoutManager.findViewByPosition(i);
                 position = i;
@@ -372,11 +394,14 @@ public class RecyclerTabLayout extends RecyclerView {
 
     @Override
     public void onDraw(Canvas canvas) {
-        if(mIndicatorPositions.size() == 0 ) return;
+        if(mIndicatorPositionQueue.size() == 0 ) return;
 
-        LinkedHashSet<Integer> tempPositions = new LinkedHashSet(mIndicatorPositions);
+        mIndicatorTempDeque.clear();
 
-        for (Integer indicatorPosition : tempPositions) {
+        //元のqueueはそのままに保持しつつ、新しいqueueで回す。
+        mIndicatorTempDeque.addAll(mIndicatorPositionQueue);
+
+        for (Integer indicatorPosition : mIndicatorTempDeque) {
             View view = mLinearLayoutManager.findViewByPosition(indicatorPosition);
             if (view == null) {
                 if (mRequestScrollToTab) {
@@ -401,7 +426,75 @@ public class RecyclerTabLayout extends RecyclerView {
             int bottom = getHeight();
 
             canvas.drawRect(left, top, right, bottom, mIndicatorPaint);
+
+            Log.d("RecyclerTabLayout", "left:" + left + ",right:" + right);
+
+            switch (mTabSelectType) {
+                case 0:
+                    //oval
+                    canvas.drawRoundRect(new RectF(left, mPxPaddingOval, right, bottom - mPxPaddingOval), mPxRound, mPxRound, mTabItemIndicatorPaint);
+                    break;
+                case 1:
+                    //rect
+                    canvas.drawRect(left, 0, right, top, mTabItemIndicatorPaint);
+                    break;
+                case 2:
+                    //partialRect
+                    Path path = RoundedRect(left, mPxPaddingPartialRectTop, right, bottom, 30, 30, true, true, false, false);
+                    canvas.drawPath(path, mTabItemIndicatorPaint);
+                    break;
+            }
         }
+    }
+
+    public Path RoundedRect(float left, float top, float right, float bottom, float rx, float ry,
+                            boolean tl, boolean tr, boolean br, boolean bl){
+        Path path = new Path();
+        if (rx < 0) rx = 0;
+        if (ry < 0) ry = 0;
+        float width = right - left;
+        float height = bottom - top;
+        if (rx > width / 2) rx = width / 2;
+        if (ry > height / 2) ry = height / 2;
+        float widthMinusCorners = (width - (2 * rx));
+        float heightMinusCorners = (height - (2 * ry));
+
+        path.moveTo(right, top + ry);
+        if (tr)
+            path.rQuadTo(0, -ry, -rx, -ry);//top-right corner
+        else{
+            path.rLineTo(0, -ry);
+            path.rLineTo(-rx,0);
+        }
+        path.rLineTo(-widthMinusCorners, 0);
+        if (tl)
+            path.rQuadTo(-rx, 0, -rx, ry); //top-left corner
+        else{
+            path.rLineTo(-rx, 0);
+            path.rLineTo(0,ry);
+        }
+        path.rLineTo(0, heightMinusCorners);
+
+        if (bl)
+            path.rQuadTo(0, ry, rx, ry);//bottom-left corner
+        else{
+            path.rLineTo(0, ry);
+            path.rLineTo(rx,0);
+        }
+
+        path.rLineTo(widthMinusCorners, 0);
+        if (br)
+            path.rQuadTo(rx, 0, rx, -ry); //bottom-right corner
+        else{
+            path.rLineTo(rx,0);
+            path.rLineTo(0, -ry);
+        }
+
+        path.rLineTo(0, -heightMinusCorners);
+
+        path.close();//Given close, last lineto can be removed.
+
+        return path;
     }
 
     protected boolean isLayoutRtl() {
@@ -557,14 +650,8 @@ public class RecyclerTabLayout extends RecyclerView {
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             TabTextView tabTextView = new TabTextView(parent.getContext());
 
-            if (mTabSelectedTextColorSet) {
-                tabTextView.setTextColor(tabTextView.createColorStateList(
-                        tabTextView.getCurrentTextColor(), mTabSelectedTextColor));
-            }
-
             ViewCompat.setPaddingRelative(tabTextView, mTabPaddingStart, mTabPaddingTop,
                     mTabPaddingEnd, mTabPaddingBottom);
-            tabTextView.setTextAppearance(parent.getContext(), mTabTextAppearance);
             tabTextView.setGravity(Gravity.CENTER);
             tabTextView.setMaxLines(MAX_TAB_TEXT_LINES);
             tabTextView.setEllipsize(TextUtils.TruncateAt.END);
@@ -667,7 +754,7 @@ public class RecyclerTabLayout extends RecyclerView {
 
                             int loopDistance = pos - mIndicatorPosition;
                             float percent = (float)loopDistance/mRealItemCount;
-                            if(Math.abs(percent) != 0.5f) {
+                            if(mTabOnScreenLimit == 0 && Math.abs(percent) != 0.5f) {
                                 int nearlyTheSameItem = mIndicatorPosition + Math.round(percent) * mRealItemCount;
                                 loopDistance = pos - nearlyTheSameItem;
                             }
@@ -698,5 +785,23 @@ public class RecyclerTabLayout extends RecyclerView {
             colors[1] = defaultColor;
             return new ColorStateList(states, colors);
         }
+
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            Typeface typeface;
+            if(isSelected()) {
+                typeface = Typeface.DEFAULT_BOLD;
+            } else {
+                typeface = Typeface.DEFAULT;
+            }
+
+            setTypeface(typeface);
+            super.onDraw(canvas);
+        }
+    }
+
+    public int dip(Context context, int value) {
+        return (int)(value * context.getResources().getDisplayMetrics().density);
     }
 }

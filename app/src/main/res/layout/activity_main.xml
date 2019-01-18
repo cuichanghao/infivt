@@ -9,17 +9,35 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         app:rtl_tabIndicatorColor="?attr/colorAccent"
-        app:rtl_tabIndicatorHeight="2dp"
+        app:rtl_tabIndicatorHeight="0dp"
         app:rtl_tabTextAppearance="@android:style/TextAppearance.Small"
         app:rtl_tabSelectedTextColor="?android:textColorPrimary"
         app:rtl_tabMinWidth="72dp"
         app:rtl_tabMaxWidth="264dp"
-        app:rtl_tabPaddingStart="12dp"
-        app:rtl_tabPaddingTop="0dp"
-        app:rtl_tabPaddingEnd="12dp"
-        app:rtl_tabPaddingBottom="0dp"
-        app:rtl_tabPadding="0dp"
+        app:rtl_tabPaddingStart="22dp"
+        app:rtl_tabPaddingEnd="22dp"
+        app:rtl_selectType="oval"
+        android:textAlignment="center"
         />
+
+    <!--<cc.cuichanghao.library.RecyclerTabLayout-->
+        <!--android:id="@+id/tab_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:elevation="4dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--app:rtl_tabIndicatorColor="?attr/colorAccent"-->
+        <!--app:rtl_tabIndicatorHeight="0dp"-->
+        <!--app:rtl_tabTextAppearance="@android:style/TextAppearance.Small"-->
+        <!--app:rtl_tabSelectedTextColor="?android:textColorPrimary"-->
+        <!--app:rtl_tabOnScreenLimit="4"-->
+        <!--app:rtl_tabPaddingStart="8dp"-->
+        <!--app:rtl_tabPaddingTop="8dp"-->
+        <!--app:rtl_tabPaddingEnd="8dp"-->
+        <!--app:rtl_tabPaddingBottom="0dp"-->
+        <!--app:rtl_selectType="partialRect"-->
+        <!--/>-->
 
     <cc.cuichanghao.library.InfiniteViewPager
         android:id="@+id/view_pager"
