@@ -10,6 +10,7 @@ class EntryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entry)
+        title = "Infinite Viewpager With TabLayout"
     }
 
     fun onStartNormally(view: View) {

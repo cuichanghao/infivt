@@ -13,6 +13,8 @@
         android:layout_marginTop="16dp"
         android:text="normally"
         android:onClick="onStartNormally"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
         />
 
     <Button
@@ -21,6 +23,8 @@
         android:layout_marginTop="16dp"
         android:text="oval"
         android:onClick="onStartOval"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
         />
 
     <Button
@@ -29,6 +33,8 @@
         android:layout_marginTop="16dp"
         android:text="partialRect_with_non_loop"
         android:onClick="onStartPartialRect"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
         />
 
     <Button
@@ -37,6 +43,8 @@
         android:layout_marginTop="16dp"
         android:text="rect"
         android:onClick="onStartRect"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
         />
 
 </LinearLayout>
