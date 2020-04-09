@@ -19,9 +19,6 @@ class MainActivityNormally : AppCompatActivity() {
         adapter = MainAdapter(supportFragmentManager)
         adapter.setData(list)
 
-//        view_pager.adapter = adapter
-//        tab_layout.setupWithViewPager(view_pager)
-
         wrappedAdapter = InfinitePagerAdapter(adapter)
         view_pager.adapter = wrappedAdapter
 
@@ -44,11 +41,18 @@ class MainActivityNormally : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             R.id.change_adapter -> {
+                val oldItemTitle = wrappedAdapter.getPageTitle(view_pager.currentItem)
+
                 adapter.setData(list2)
                 wrappedAdapter.notifyDataSetChangedWithoutSubAdapter()
-//                view_pager.adapter?.notifyDataSetChanged()
-//                tab_layout.setupWithViewPager(view_pager)
-                tab_layout.adapter?.notifyDataSetChanged()
+                tab_layout.setUpWithViewPager(view_pager)
+
+                var newItemPosition = list2.indexOf(oldItemTitle)
+                if (newItemPosition == -1) {
+                    newItemPosition = 0
+                }
+
+                tab_layout.setCurrentItem(view_pager.offsetAmount + newItemPosition, false)
             }
         }
         return super.onOptionsItemSelected(item);
