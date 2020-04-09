@@ -41,7 +41,7 @@ public class InfiniteViewPager extends ViewPager {
             boolean nearLeftEdge = item <= infAdapter.getRealCount();
             boolean nearRightEdge = item >= infAdapter.getCount() - infAdapter.getRealCount();
             if (nearLeftEdge || nearRightEdge) {
-                super.setCurrentItem(getOffsetAmount(), false);
+                super.setCurrentItem(getOffsetAmount() + item % infAdapter.getRealCount(), false);
                 return;
             }
         }
