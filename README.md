@@ -1,5 +1,5 @@
 # infivt
-infinite Viewpager with Recycler Tablayout and cached Fragment
+infinite Viewpager with Recycler Tablayout
 
 Reference:[RecyclerTabLayout](https://github.com/nshmura/RecyclerTabLayout),[InfiniteViewPager](https://github.com/antonyt/InfiniteViewPager)
 
