@@ -1,28 +1,57 @@
 package cc.cuichanghao.infivt
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import cc.cuichanghao.library.InfinitePagerAdapter
-import cc.cuichanghao.library.InfiniteViewPager
-import cc.cuichanghao.library.RecyclerTabLayout
+import kotlinx.android.synthetic.main.activity_main_normally.*
+
 
 class MainActivityNormally : AppCompatActivity() {
 
+    private lateinit var adapter: MainAdapter
+    private lateinit var wrappedAdapter: InfinitePagerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_normally)
 
-        val adapter = MainAdapter(supportFragmentManager)
-        val wrappedAdapter = InfinitePagerAdapter(adapter)
+        adapter = MainAdapter(supportFragmentManager)
+        adapter.setData(list)
 
-        val viewPager = findViewById<InfiniteViewPager>(R.id.view_pager)
-        viewPager.adapter = wrappedAdapter
+//        view_pager.adapter = adapter
+//        tab_layout.setupWithViewPager(view_pager)
 
-        val recyclerTabLayout = findViewById<RecyclerTabLayout>(R.id.tab_layout)
-        recyclerTabLayout.setUpWithViewPager(viewPager)
+        wrappedAdapter = InfinitePagerAdapter(adapter)
+        view_pager.adapter = wrappedAdapter
 
-        if(savedInstanceState == null) {
-            recyclerTabLayout.setCurrentItem(viewPager.offsetAmount, false)
+        tab_layout.setUpWithViewPager(view_pager)
+
+        if (savedInstanceState == null) {
+            tab_layout.setCurrentItem(view_pager.offsetAmount, false)
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.change_adapter, menu)
+
+        // return true so that the menu pop up is opened
+        return true
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId) {
+            R.id.change_adapter -> {
+                adapter.setData(list2)
+                wrappedAdapter.notifyDataSetChangedWithoutSubAdapter()
+//                view_pager.adapter?.notifyDataSetChanged()
+//                tab_layout.setupWithViewPager(view_pager)
+                tab_layout.adapter?.notifyDataSetChanged()
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

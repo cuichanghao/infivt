@@ -1,9 +1,9 @@
 package cc.cuichanghao.infivt
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 
 class EntryActivity : AppCompatActivity() {
 
@@ -27,5 +27,9 @@ class EntryActivity : AppCompatActivity() {
 
     fun onStartRect(view: View) {
         startActivity(Intent(this, MainActivityRect::class.java))
+    }
+
+    fun onStartChangableFragmentAdapter(view: View) {
+        startActivity(Intent(this, MainActivityChangeablePager::class.java))
     }
 }

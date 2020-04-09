@@ -1,10 +1,9 @@
 package cc.cuichanghao.infivt
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import cc.cuichanghao.library.InfinitePagerAdapter
-import cc.cuichanghao.library.InfiniteViewPager
-import cc.cuichanghao.library.RecyclerTabLayout
+import kotlinx.android.synthetic.main.activity_main_oval.*
 
 class MainActivityOval : AppCompatActivity() {
 
@@ -14,16 +13,13 @@ class MainActivityOval : AppCompatActivity() {
         setContentView(R.layout.activity_main_oval)
 
         val adapter = MainAdapter(supportFragmentManager)
+        adapter.setData(list)
         val wrappedAdapter = InfinitePagerAdapter(adapter)
 
-        val viewPager = findViewById<InfiniteViewPager>(R.id.view_pager)
-        viewPager.adapter = wrappedAdapter
-
-        val recyclerTabLayout = findViewById<RecyclerTabLayout>(R.id.tab_layout)
-        recyclerTabLayout.setUpWithViewPager(viewPager)
-
+        view_pager.adapter = wrappedAdapter
+        tab_layout.setUpWithViewPager(view_pager)
         if(savedInstanceState == null) {
-            recyclerTabLayout.setCurrentItem(viewPager.offsetAmount, false)
+            tab_layout.setCurrentItem(view_pager.offsetAmount, false)
         }
     }
 }

@@ -1,37 +1,31 @@
 package cc.cuichanghao.infivt
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_cached.*
 
 /**
  * Example Fragment class that shows an position inside a TextView.
  */
-class CachedFragment : Fragment() {
+class ContentFragment : Fragment() {
 
-    private var position: Int = 0
-
-    companion object {
-        val list = listOf("A", "B-LargeTitle", "C", "D")
-    }
+    private var title: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val args = arguments
-        position = args!!.getInt("position")
+        title = args?.getString("title")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         return inflater.inflate(R.layout.fragment_cached, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        text.text = list[position]
+        text.text = title
     }
 }

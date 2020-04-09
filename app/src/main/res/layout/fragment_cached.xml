@@ -5,18 +5,17 @@
     android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     >
 
 
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
         android:gravity="center"
         tools:text="FragmentText"
         android:textColor="@android:color/holo_red_light"
         android:textSize="20sp"
         />
-
 </LinearLayout>

@@ -22,6 +22,7 @@
         <activity android:name=".MainActivityOval"></activity>
         <activity android:name=".MainActivityPartialRect"></activity>
         <activity android:name=".MainActivityRect"></activity>
+        <activity android:name=".MainActivityChangeablePager"></activity>
     </application>
 
 </manifest>

@@ -2,14 +2,15 @@ package cc.cuichanghao.library;
 
 import android.database.DataSetObserver;
 import android.os.Parcelable;
-import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.viewpager.widget.PagerAdapter;
 
 /**
  * A PagerAdapter that wraps around another PagerAdapter to handle paging wrap-around.
  */
-public class InfinitePagerAdapter extends PagerAdapter{
+public class InfinitePagerAdapter extends PagerAdapter {
 
     private static final int DEFAULT_NUM_OF_LOOPS = 1000; //enough 1000 loop
     private int numOfLoops = DEFAULT_NUM_OF_LOOPS;
@@ -31,10 +32,13 @@ public class InfinitePagerAdapter extends PagerAdapter{
     @Override
     public int getCount() {
         if (getRealCount() == 0) {
+            Log.d("AA", "InfinitePagerAdapter 00");
             return 0;
         }
         // warning: scrolling to very high values (1,000,000+) results in
         // strange drawing behaviour
+
+        Log.d("AA", "InfinitePagerAdapter 11 " + numOfLoops * getRealCount());
         return numOfLoops * getRealCount();
     }
 
@@ -122,6 +126,11 @@ public class InfinitePagerAdapter extends PagerAdapter{
     @Override
     public void notifyDataSetChanged() {
         adapter.notifyDataSetChanged();
+        super.notifyDataSetChanged();
+    }
+
+    public void notifyDataSetChangedWithoutSubAdapter() {
+        super.notifyDataSetChanged();
     }
 
     @Override
