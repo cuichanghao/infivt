@@ -210,6 +210,10 @@ public class RecyclerTabLayout extends RecyclerView {
         }
     }
 
+    public void setTabOnScreenLimit(int tabOnScreenLimit) {
+        this.mTabOnScreenLimit = tabOnScreenLimit;
+    }
+
     public void setUpWithViewPager(InfiniteViewPager viewPager) {
 
         DefaultAdapter adapter = new DefaultAdapter(viewPager);
