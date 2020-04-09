@@ -21,6 +21,7 @@
         app:rtl_tabPaddingEnd="8dp"
         app:rtl_tabPaddingBottom="0dp"
         app:rtl_selectType="partialRect"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
     <cc.cuichanghao.library.InfiniteViewPager

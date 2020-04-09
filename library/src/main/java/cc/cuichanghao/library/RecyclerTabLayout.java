@@ -768,8 +768,10 @@ public class RecyclerTabLayout extends RecyclerView {
                             }
 
                             PagerAdapter pagerAdapter = getViewPager().getAdapter();
+                            int realCount = 0;
                             if(pagerAdapter instanceof InfinitePagerAdapter){
                                 ((InfinitePagerAdapter) pagerAdapter).willBePageSelect(pos);
+                                realCount = ((InfinitePagerAdapter) pagerAdapter).getRealCount();
                             }
 
                             int loopDistance = pos - mIndicatorPosition;
@@ -780,7 +782,14 @@ public class RecyclerTabLayout extends RecyclerView {
                             }
 
                             int currentItem = getViewPager().getCurrentItem();
-                            getViewPager().setCurrentItem(currentItem + loopDistance, true);
+                            currentItem = currentItem + loopDistance;
+
+                            // loopしない場合にはマイナスになる
+                            if (currentItem < 0) {
+                                currentItem = realCount + currentItem;
+                            }
+
+                            getViewPager().setCurrentItem(currentItem, true);
                         }
                     }
                 });

@@ -15,6 +15,7 @@
         app:rtl_tabMinWidth="72dp"
         app:rtl_tabMaxWidth="264dp"
         app:rtl_selectType="rect"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
     <cc.cuichanghao.library.InfiniteViewPager
