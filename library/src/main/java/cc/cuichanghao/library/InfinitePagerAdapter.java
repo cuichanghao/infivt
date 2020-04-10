@@ -97,6 +97,7 @@ public class InfinitePagerAdapter extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
+        if (getRealCount() == 0) return null;
         int virtualPosition = position % getRealCount();
         return adapter.getPageTitle(virtualPosition);
     }
