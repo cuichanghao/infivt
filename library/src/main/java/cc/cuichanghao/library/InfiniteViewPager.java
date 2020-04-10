@@ -36,7 +36,7 @@ public class InfiniteViewPager extends ViewPager {
 
     @Override
     public void setCurrentItem(int item, boolean smoothScroll) {
-        if (getAdapter() instanceof InfinitePagerAdapter) {
+        if (getAdapter() instanceof InfinitePagerAdapter && getAdapter().getCount() > 0) {
             InfinitePagerAdapter infAdapter = (InfinitePagerAdapter) getAdapter();
 
             boolean nearLeftEdge = item <= infAdapter.getRealCount();

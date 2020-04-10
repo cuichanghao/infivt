@@ -17,10 +17,11 @@ class MainActivityNormally : AppCompatActivity() {
         setContentView(R.layout.activity_main_normally)
 
         adapter = MainAdapter(supportFragmentManager)
-        adapter.setData(list)
-
         wrappedAdapter = InfinitePagerAdapter(adapter)
         view_pager.adapter = wrappedAdapter
+
+        adapter.setData(list)
+        wrappedAdapter.notifyDataSetChangedWithoutSubAdapter()
 
         tab_layout.setUpWithViewPager(view_pager)
 

@@ -32,13 +32,11 @@ public class InfinitePagerAdapter extends PagerAdapter {
     @Override
     public int getCount() {
         if (getRealCount() == 0) {
-            Log.d("AA", "InfinitePagerAdapter 00");
             return 0;
         }
         // warning: scrolling to very high values (1,000,000+) results in
         // strange drawing behaviour
 
-        Log.d("AA", "InfinitePagerAdapter 11 " + numOfLoops * getRealCount());
         return numOfLoops * getRealCount();
     }
 
