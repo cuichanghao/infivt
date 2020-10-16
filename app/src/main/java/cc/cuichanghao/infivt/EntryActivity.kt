@@ -32,4 +32,8 @@ class EntryActivity : AppCompatActivity() {
     fun onStartChangableFragmentAdapter(view: View) {
         startActivity(Intent(this, MainActivityChangeablePager::class.java))
     }
+
+    fun onStartWithoutTab(view: View){
+        startActivity(Intent(this, MainActivityWithoutTab::class.java))
+    }
 }
